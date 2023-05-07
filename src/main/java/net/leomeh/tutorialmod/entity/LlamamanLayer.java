@@ -28,7 +28,7 @@ public class LlamamanLayer extends GeoEntityRenderer<LlamamanEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(LlamamanEntity instance) {
-        return new ResourceLocation(TutorialMod.MOD_ID, "textures/entity/llamaman.png");
+        return new ResourceLocation(TutorialMod.MOD_ID, "textures/entity/llamaman2.png");
     }
 
     @Override
