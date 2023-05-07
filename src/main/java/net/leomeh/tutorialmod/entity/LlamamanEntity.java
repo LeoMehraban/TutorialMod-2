@@ -34,7 +34,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class LlamamanEntity extends Monster implements RangedAttackMob, IAnimatable {
-    private AnimationFactory factory = new AnimationFactory(this);
+    private AnimationFactory factory = GeckoLibUtil.createFactory(this);
     public LlamamanEntity(EntityType<LlamamanEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -51,7 +51,8 @@ public class LlamamanEntity extends Monster implements RangedAttackMob, IAnimata
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(3, new RangedAttackGoal(this, 1.25D, 40, 20.0F));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.5D, true));
+        this.goalSelector.addGoal(3, new RangedAttackGoal(this, 1.25D, 40, 10.0F));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 
@@ -77,6 +78,10 @@ public class LlamamanEntity extends Monster implements RangedAttackMob, IAnimata
         this.level.addFreshEntity(llamaspit);
         this.didSpit = true;
     }
+
+
+
+
     @Override
     public void performRangedAttack(LivingEntity pTarget, float pDistanceFactor) {
         this.spit(pTarget);
@@ -94,7 +99,7 @@ public class LlamamanEntity extends Monster implements RangedAttackMob, IAnimata
             event.getController().setAnimation(new AnimationBuilder().addAnimation("Walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().clearAnimations());
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("Idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
