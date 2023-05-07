@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "11 ",
+    "## ",
+    "## "
+  ],
+  "key": {
+    "#": {
+      "item": "tutorialmod:livingstone"
+    },
+    "1": {
+      "item": "tutorialmod:core_gem"
+    }
+  },
+  "result": {
+    "item": "tutorialmod:wandforger_table"
+  }
+}

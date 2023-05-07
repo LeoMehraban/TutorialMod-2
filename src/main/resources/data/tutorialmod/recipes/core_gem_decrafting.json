@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tutorialmod:core_gem_block"
+    }
+  ],
+  "result": {
+    "item": "tutorialmod:core_gem",
+    "count": 9
+  }
+}

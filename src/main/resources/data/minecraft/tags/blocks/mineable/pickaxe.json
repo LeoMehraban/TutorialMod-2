@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "tutorialmod:livingstone",
+    "tutorialmod:livingmetal_block",
+    "tutorialmod:core_gem_block",
+    "tutorialmod:core_gem_ore",
+    "tutorialmod:deepslate_core_gem_ore",
+    "tutorialmod:deathsteel_block"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#1#",
+    " 2 ",
+    " 3 "
+  ],
+  "key": {
+    "#": {
+      "item": "tutorialmod:livingingot"
+    },
+    "1": {
+      "item": "tutorialmod:core_gem"
+    },
+    "2": {
+      "item": "minecraft:string"
+    },
+    "3": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "tutorialmod:summonwand_cat"
+  }
+}

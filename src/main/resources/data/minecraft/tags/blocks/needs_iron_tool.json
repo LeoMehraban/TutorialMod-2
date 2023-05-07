@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "tutorialmod:core_gem_block",
+    "tutorialmod:core_gem_ore",
+    "tutorialmod:deepslate_core_gem_ore"
+  ]
+}

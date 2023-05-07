@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tutorialmod:deathsteel_block"
+    }
+  ],
+  "result": {
+    "item": "tutorialmod:deathsteel",
+    "count": 9
+  }
+}

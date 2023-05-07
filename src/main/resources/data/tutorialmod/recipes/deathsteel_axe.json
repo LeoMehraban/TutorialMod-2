@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "11 ",
+    "1# ",
+    " #  "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "1": {
+      "item": "tutorialmod:deathsteel_ingot"
+    }
+  },
+  "result": {
+    "item": "tutorialmod:deathsteel_axe"
+  }
+}

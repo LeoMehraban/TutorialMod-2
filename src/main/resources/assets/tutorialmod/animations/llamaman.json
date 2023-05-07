@@ -1,0 +1,75 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 5.5,
+				"visible_bounds_offset": [0, 2.25, 0]
+			},
+			"bones": [
+				{
+					"name": "Llamaman",
+					"pivot": [0, 0, -6]
+				},
+				{
+					"name": "head",
+					"parent": "Llamaman",
+					"pivot": [0, 37, -3],
+					"cubes": [
+						{"origin": [-2, 47, -13], "size": [4, 4, 9], "uv": [62, 42]},
+						{"origin": [-4, 35, -9], "size": [8, 18, 6], "uv": [34, 39]},
+						{"origin": [1, 53, -7], "size": [3, 3, 2], "uv": [0, 5]},
+						{"origin": [-4, 53, -7], "size": [3, 3, 2], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "body",
+					"parent": "Llamaman",
+					"pivot": [0, 12, -6],
+					"cubes": [
+						{"origin": [-10, 28, -5], "size": [20, 14, 12], "uv": [0, 0]},
+						{"origin": [-6, 17, -3], "size": [12, 11, 8], "uv": [0, 26]}
+					]
+				},
+				{
+					"name": "leg1",
+					"parent": "Llamaman",
+					"pivot": [-3.5, 14, 0],
+					"cubes": [
+						{"origin": [-7, 0, -2], "size": [5, 19, 6], "uv": [0, 45]}
+					]
+				},
+				{
+					"name": "leg2",
+					"parent": "Llamaman",
+					"pivot": [3.5, 14, 0],
+					"cubes": [
+						{"origin": [2, 0, -2], "size": [5, 19, 6], "uv": [0, 45]}
+					]
+				},
+				{
+					"name": "arm1",
+					"parent": "Llamaman",
+					"pivot": [-7.5, 25, -10],
+					"cubes": [
+						{"origin": [-14, 25, -1], "size": [4, 14, 4], "uv": [0, 70]},
+						{"origin": [-14.5, 9, -1.5], "size": [5, 16, 5], "uv": [22, 63]}
+					]
+				},
+				{
+					"name": "arm2",
+					"parent": "Llamaman",
+					"pivot": [8.5, 30, 1],
+					"cubes": [
+						{"origin": [10, 26, -1], "size": [4, 14, 4], "uv": [0, 70]},
+						{"origin": [9.5, 10, -1.5], "size": [5, 16, 5], "uv": [59, 21]}
+					]
+				}
+			]
+		}
+	]
+}

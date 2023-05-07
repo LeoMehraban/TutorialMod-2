@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "tutorialmod:livingstone_pebble"
+    },
+    {
+      "item": "tutorialmod:livingstone_pebble"
+    },
+    {
+      "item": "tutorialmod:livingstone_pebble"
+    },
+    {
+      "item": "tutorialmod:livingstone_pebble"
+    }
+  ],
+  "result": {
+    "item": "tutorialmod:livingstone"
+  }
+}
