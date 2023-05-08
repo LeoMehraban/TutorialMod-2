@@ -18,7 +18,11 @@ import net.leomeh.tutorialmod.villager.ModVillagers;
 import net.leomeh.tutorialmod.world.feature.ModConfiguredFeatures;
 import net.leomeh.tutorialmod.world.feature.ModPlacedFeatures;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,6 +68,10 @@ public class TutorialMod {
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             ModVillagers.registerPOIs();
+            SpawnPlacements.register(ModEntityTypes.CHOMPER.get(),
+                    SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    Mob::checkMobSpawnRules);
+
         });
         ModMessages.register();
         SlotsHudOverlay.SLOTS_COUNT = TutorialConfig.slots_number.get();

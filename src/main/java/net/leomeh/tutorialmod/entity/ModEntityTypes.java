@@ -18,7 +18,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<LlamamanEntity>> CHOMPER =
             ENTITY_TYPES.register("llamaman",
-                    () -> EntityType.Builder.of(LlamamanEntity::new, MobCategory.MONSTER)
+                    () -> EntityType.Builder.of(LlamamanEntity::new, MobCategory.CREATURE)
                             .sized(1.4f, 3.0f)
                             .build(new ResourceLocation(TutorialMod.MOD_ID, "llamaman").toString()));
 
