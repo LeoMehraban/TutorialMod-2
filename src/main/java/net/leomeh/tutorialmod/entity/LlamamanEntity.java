@@ -4,12 +4,14 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -27,6 +29,7 @@ import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -38,19 +41,40 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
-public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable ,NeutralMob {
-    private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
-    private int remainingPersistentAngerTime;
+public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable{
 
-    @Nullable
-    private UUID persistentAngerTarget;
     private AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public LlamamanEntity(EntityType<LlamamanEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
+
+
+    List<LivingEntity> getNearbyLivingEntities(ServerLevel pLevel, LivingEntity pEntity){
+        AABB aabb = pEntity.getBoundingBox().inflate((double)this.radiusXZ(), (double)this.radiusY(), (double)this.radiusXZ());
+        List<LivingEntity> list = pLevel.getEntitiesOfClass(LivingEntity.class, aabb, (p_26717_) -> {
+            return p_26717_ != pEntity && p_26717_.isAlive();
+        });
+        list.sort(Comparator.comparingDouble(pEntity::distanceToSqr));
+        return  list;
+    }
+
+
+
+
+    protected int radiusXZ() {
+        return 16;
+    }
+
+    protected int radiusY() {
+        return 16;
+    }
+
+
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
@@ -59,6 +83,7 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
                 .add(Attributes.ATTACK_SPEED, 0.4f)
                 .add(Attributes.MOVEMENT_SPEED, 0.2f).build();
     }
+
 
 
     private boolean didSpit = false;
@@ -71,8 +96,8 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new ResetUniversalAngerTargetGoal<>(this, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
+        //this.targetSelector.addGoal(4, new ResetUniversalAngerTargetGoal<>(this, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Creeper.class, true));
@@ -126,27 +151,6 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         return factory;
     }
 
-    public void startPersistentAngerTimer() {
-        this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
-    }
-
-    public void setRemainingPersistentAngerTime(int pTime) {
-        this.remainingPersistentAngerTime = pTime;
-    }
-
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public UUID getPersistentAngerTarget() {
-        return null;
-    }
-
-    public int getRemainingPersistentAngerTime() {
-        return this.remainingPersistentAngerTime;
-    }
-
-    public void setPersistentAngerTarget(@Nullable UUID pTarget) {
-        this.persistentAngerTarget = pTarget;
-    }
 }
 
 

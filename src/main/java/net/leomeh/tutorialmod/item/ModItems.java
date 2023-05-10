@@ -42,7 +42,7 @@ public class ModItems {
     public static final RegistryObject<Item>   ALLAYSUMMONWAND = ITEMS.register("summonwand_allay", () -> new AllaySummonWand(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1).durability(200)));
     public static final RegistryObject<Item>   LIVINGHELMET = ITEMS.register("living_helmet", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.HEAD,new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1)));
 
-    public static final RegistryObject<Item>   LLAMA_LEATHER_HELMET = ITEMS.register("llama_leather_helmet", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.HEAD,new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1)));
+    public static final RegistryObject<Item>   LLAMA_LEATHER_HELMET = ITEMS.register("llama_leather_helmet", () -> new ArmorItem(ModArmorMaterials.LLAMA_LEATHER, EquipmentSlot.HEAD,new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1)));
     public static final RegistryObject<Item>   LIVINGCHESTPLATE = ITEMS.register("living_chestplate", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.CHEST,new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1)));
 
     public static final RegistryObject<Item>   LIVINGLEGGINGS = ITEMS.register("living_leggings", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.LEGS,new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1)));

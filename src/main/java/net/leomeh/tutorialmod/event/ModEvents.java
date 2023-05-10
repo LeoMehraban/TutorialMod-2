@@ -2,7 +2,6 @@ package net.leomeh.tutorialmod.event;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.entity.LlamamanEntity;
-import net.leomeh.tutorialmod.entity.LlamamanLayer;
 import net.leomeh.tutorialmod.entity.ModEntityTypes;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
 import net.leomeh.tutorialmod.item.ModItems;
@@ -21,11 +20,11 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -33,12 +32,30 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class ModEvents {
     @Mod.EventBusSubscriber(modid = TutorialMod.MOD_ID)
     public static class ForgeEvents {
+
+        @SubscribeEvent
+        public static void onLivingChangeTargetEvent(LivingChangeTargetEvent event){
+            if(event.getEntity().getType() == ModEntityTypes.CHOMPER.get()) {
+
+                if (event.getNewTarget() != null) {
+                    event.getNewTarget().getArmorSlots().forEach((ItemStack itemStack) -> {
+                        if (itemStack.getItem() instanceof ArmorItem armorItem) {
+                            if (armorItem.getMaterial() == ModArmorMaterials.LLAMA_LEATHER) {
+                                event.setCanceled(true);
+                            }
+                        }
+                    });
+
+                }
+            }
+
+        }
         @SubscribeEvent
         public static void addCustomTrades(VillagerTradesEvent event) {
             if (event.getType() == ModVillagers.WANDFORGER.get()) {
