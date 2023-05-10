@@ -5,7 +5,7 @@
   ],
   "spawners": {
     "type": "tutorialmod:llamaman",
-    "weight": 50,
+    "weight": 150,
     "minCount": 3,
     "maxCount": 10
   }

@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "tutorialmod:llama_tent",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 54667,
+    "spacing": 20,
+    "separation": 6,
+    "type": "minecraft:random_spread"
+  }
+}

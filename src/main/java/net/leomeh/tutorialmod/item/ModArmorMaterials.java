@@ -16,6 +16,8 @@ public class ModArmorMaterials implements ArmorMaterial {
             2.0F, 0.0F, () -> Ingredient.of(ModItems.LIVINGINGOT.get()));
 
     public static ModArmorMaterials DEATHSTEEL = new ModArmorMaterials("deathsteel", 28, new int[]{2,5,8,3}, 19, SoundEvents.ARMOR_EQUIP_GOLD, 2.0F, 2.0F, ()->Ingredient.of(ModItems.DEATHSTEEL_INGOT.get()));
+
+    public static ModArmorMaterials LLAMA_LEATHER = new ModArmorMaterials("llama_leather", 28, new int[]{2,5,8,3}, 19, SoundEvents.ARMOR_EQUIP_GOLD, 2.0F, 2.0F, ()->Ingredient.of(ModItems.LLAMA_LEATHER.get()));
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
     private final String name;
     private final int durabilityMultiplier;

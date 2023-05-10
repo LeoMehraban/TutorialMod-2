@@ -1,0 +1,94 @@
+{
+
+"name": "tutorialmod:llama_tent/side_pool",
+
+"fallback": "tutorialmod:llama_tent/start_pool",
+
+"elements": [
+  {
+
+    "weight": 30,
+    "element": {
+
+      "location": "tutorialmod:llama_junction",
+
+      "processors": "minecraft:empty",
+
+      "projection": "terrain_matching",
+
+      "element_type": "minecraft:single_pool_element"
+    }
+  },
+
+  {
+
+    "weight": 50,
+    "element": {
+
+      "location": "tutorialmod:llama_tent",
+
+      "processors": "minecraft:empty",
+
+      "projection": "rigid",
+
+      "element_type": "minecraft:single_pool_element"
+    }
+  },
+  {
+
+    "weight": 20,
+    "element": {
+
+      "location": "tutorialmod:llama_square",
+
+      "processors": "minecraft:empty",
+
+      "projection": "rigid",
+
+      "element_type": "minecraft:single_pool_element"
+    }
+  },
+  {
+
+    "weight": 50,
+    "element": {
+
+      "location": "tutorialmod:llama_tent_2",
+
+      "processors": "minecraft:empty",
+
+      "projection": "rigid",
+
+      "element_type": "minecraft:single_pool_element"
+    }
+  },
+  {
+
+    "weight": 50,
+    "element": {
+
+      "location": "tutorialmod:llama_tent_3",
+
+      "processors": "minecraft:empty",
+
+      "projection": "rigid",
+
+      "element_type": "minecraft:single_pool_element"
+    }
+  },
+  {
+
+    "weight": 20,
+    "element": {
+
+      "location": "tutorialmod:llama_tent_large",
+
+      "processors": "minecraft:empty",
+
+      "projection": "rigid",
+
+      "element_type": "minecraft:single_pool_element"
+    }
+  }
+]
+}

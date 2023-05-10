@@ -1,0 +1,31 @@
+{
+
+"name": "tutorialmod:llama_tent/start_pool",
+
+"fallback": "tutorialmod:llama_tent",
+
+"elements": [
+  {
+    "weight": 10,
+    "element": {
+      "location": "tutorialmod:llama_junction",
+      "processors": "minecraft:empty",
+      "projection": "terrain_matching",
+      "element_type": "minecraft:single_pool_element"
+    }
+  },{
+
+    "weight": 30,
+    "element": {
+
+      "location": "tutorialmod:llama_junction_2",
+
+      "processors": "minecraft:empty",
+
+      "projection": "terrain_matching",
+
+      "element_type": "minecraft:single_pool_element"
+    }
+}
+]
+}
