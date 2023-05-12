@@ -6,6 +6,7 @@ import net.leomeh.tutorialmod.entity.ModEntityTypes;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
 import net.leomeh.tutorialmod.item.ModItems;
 import net.leomeh.tutorialmod.networking.ModMessages;
+import net.leomeh.tutorialmod.networking.packet.DespawnC2SPacket;
 import net.leomeh.tutorialmod.networking.packet.SlotsDataSyncS2CPacket;
 import net.leomeh.tutorialmod.slots.PlayerSlots;
 import net.leomeh.tutorialmod.slots.PlayerSlotsProvider;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -56,6 +58,13 @@ public class ModEvents {
 //            }
 //
 //        }
+        @SubscribeEvent
+        public static void onLivingDeathEvent(LivingDeathEvent deathEvent){
+            if(deathEvent.getEntity() instanceof  ServerPlayer player){
+                DespawnC2SPacket.doThing(player);
+            }
+        }
+
         @SubscribeEvent
         public static void addCustomTrades(VillagerTradesEvent event) {
             if (event.getType() == ModVillagers.WANDFORGER.get()) {
