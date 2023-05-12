@@ -189,13 +189,15 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
     }
 
     @Override
-    public BrainActivityGroup<LlamamanEntity> getFightTasks() { // These are the tasks that handle fighting
+    public BrainActivityGroup<LlamamanEntity> getFightTasks() {
         return BrainActivityGroup.fightTasks(
-                new InvalidateAttackTarget<>().invalidateIf((entity, target) -> (target instanceof Player pl && (pl.getAbilities().invulnerable || targetHasLlamaLeather(pl))) || distanceToSqr(target.position()) > Math.pow(getAttributeValue(Attributes.FOLLOW_RANGE), 2)),
+                new InvalidateAttackTarget<>().invalidateIf((entity, target) -> ((target instanceof Player pl
+                        && (pl.getAbilities().invulnerable
+                        || targetHasLlamaLeather(pl)))
+                        || distanceToSqr(target.position()) > Math.pow(getAttributeValue(Attributes.FOLLOW_RANGE), 2))
+                        && !(target instanceof LlamamanEntity)),
                 new SetWalkTargetToAttackTarget<>(),
                 new AnimatableRangedAttack<>(20));
-
-
     }
 
     boolean targetHasLlamaLeather(Player player){
