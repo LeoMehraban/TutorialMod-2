@@ -39,8 +39,9 @@ import org.slf4j.Logger;
 While most of the code in this and other files were written by me
 some code was written by KaupenJoe. Huge thanks to him and his tutorials
 some help and ideas were provided by Emmymonchy on the PyreMarten discord server
-Thanks to the MDD for providing java help in times of need
-Thanks to Jacqueline Vile and their anonymous friend for the textures and animations of the Llama-Man
+Emmy also helped with building the Llamaman camps
+Thanks to the MMD for providing java help in times of need
+Thanks to Jacqueline Vile and TigerJess for the textures and animations of the Llama-Man
 - Leo Mehraban, May 4, 2023
  */
 

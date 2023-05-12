@@ -1,15 +1,9 @@
 package net.leomeh.tutorialmod.entity;
 
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.leomeh.tutorialmod.item.ModArmorMaterials;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.TimeUtil;
-import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -17,19 +11,33 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.LlamaSpit;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.tslat.smartbrainlib.api.SmartBrainOwner;
+import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
+import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableRangedAttack;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetPlayerLookTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
+import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -40,12 +48,11 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable{
+public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable, SmartBrainOwner<LlamamanEntity> {
 
     private AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
@@ -88,20 +95,20 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
 
     private boolean didSpit = false;
 
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 1D, 5f));
-        this.goalSelector.addGoal(3, new RangedAttackGoal(this, 1.25D, 40, 10.0F));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        //this.targetSelector.addGoal(4, new ResetUniversalAngerTargetGoal<>(this, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Creeper.class, true));
-    }
+//    @Override
+//    protected void registerGoals() {
+//        this.goalSelector.addGoal(1, new FloatGoal(this));
+//        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 1D, 5f));
+//        this.goalSelector.addGoal(3, new RangedAttackGoal(this, 1.25D, 40, 10.0F));
+//        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+//        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+//        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+//        //this.targetSelector.addGoal(4, new ResetUniversalAngerTargetGoal<>(this, true));
+//        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
+//        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
+//        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
+//        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Creeper.class, true));
+//    }
 
 
     private void spit(LivingEntity pTarget) {
@@ -151,6 +158,68 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         return factory;
     }
 
+    @Override
+    public List<ExtendedSensor<LlamamanEntity>> getSensors() {
+        return ObjectArrayList.of(
+                new NearbyLivingEntitySensor<>(), // This tracks nearby entities
+                new HurtBySensor<>()                // This tracks the last damage source and attacker
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<LlamamanEntity> getCoreTasks() {
+        return BrainActivityGroup.coreTasks(
+                new LookAtTarget<>(),
+                new MoveToWalkTarget<>()
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<LlamamanEntity> getIdleTasks() {
+        return BrainActivityGroup.idleTasks(
+                new FirstApplicableBehaviour<LlamamanEntity>(
+                        new TargetOrRetaliate<>(),
+                        new SetPlayerLookTarget<>(),
+                        new SetRandomLookTarget<>()
+                ),
+                new OneRandomBehaviour<>(
+                        new SetRandomWalkTarget<>(),
+                        new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60)))
+                );
+    }
+
+    @Override
+    public BrainActivityGroup<LlamamanEntity> getFightTasks() { // These are the tasks that handle fighting
+        return BrainActivityGroup.fightTasks(
+                new InvalidateAttackTarget<>().invalidateIf((entity, target) -> (target instanceof Player pl && (pl.getAbilities().invulnerable || targetHasLlamaLeather(pl))) || distanceToSqr(target.position()) > Math.pow(getAttributeValue(Attributes.FOLLOW_RANGE), 2)),
+                new SetWalkTargetToAttackTarget<>(),
+                new AnimatableRangedAttack<>(20));
+
+
+    }
+
+    boolean targetHasLlamaLeather(Player player){
+        AtomicBoolean hasLL = new AtomicBoolean(false);
+        player.getArmorSlots().forEach(itemStack -> {
+                  if(itemStack.getItem() instanceof  ArmorItem armorItem){
+                      hasLL.set(armorItem.getMaterial() == ModArmorMaterials.LLAMA_LEATHER);
+                  }
+        });
+
+        return  hasLL.get();
+    }
+
+
+
+    @Override
+    protected Brain.Provider<?> brainProvider() {
+        return new SmartBrainProvider<>(this);
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        tickBrain(this);
+    }
 }
 
 
