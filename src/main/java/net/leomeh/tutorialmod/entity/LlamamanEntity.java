@@ -1,25 +1,36 @@
 package net.leomeh.tutorialmod.entity;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.leomeh.tutorialmod.entity.util.TradingMob;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
+import net.leomeh.tutorialmod.item.ModItems;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.animal.Turtle;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
@@ -27,6 +38,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableRangedAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.CustomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
@@ -38,6 +50,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliat
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -50,18 +63,14 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable, SmartBrainOwner<LlamamanEntity> {
 
-    private AnimationFactory factory = GeckoLibUtil.createFactory(this);
-
-    public LlamamanEntity(EntityType<LlamamanEntity> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
-    }
+public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable, SmartBrainOwner<LlamamanEntity>, TradingMob {
 
 
-    List<LivingEntity> getNearbyLivingEntities(ServerLevel pLevel, LivingEntity pEntity){
+    public List<LivingEntity> getNearbyLivingEntities(ServerLevel pLevel, LivingEntity pEntity){
         AABB aabb = pEntity.getBoundingBox().inflate((double)this.radiusXZ(), (double)this.radiusY(), (double)this.radiusXZ());
         List<LivingEntity> list = pLevel.getEntitiesOfClass(LivingEntity.class, aabb, (p_26717_) -> {
             return p_26717_ != pEntity && p_26717_.isAlive();
@@ -69,9 +78,6 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         list.sort(Comparator.comparingDouble(pEntity::distanceToSqr));
         return  list;
     }
-
-
-
 
     protected int radiusXZ() {
         return 16;
@@ -81,7 +87,43 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         return 16;
     }
 
+    public static Vec3 getRandomNearbyPos(LlamamanEntity pLlamaman) {
+        Vec3 vec3 = LandRandomPos.getPos(pLlamaman, 4, 2);
+        return vec3 == null ? pLlamaman.position() : vec3;
+    }
 
+    public static void throwItemsTowardRandomPos(LlamamanEntity pLlamaman, ItemStack pStacks) {
+        throwItemsTowardPos(pLlamaman, pStacks, getRandomNearbyPos(pLlamaman));
+    }
+
+    public static void throwItem(LlamamanEntity pLlamaman, ItemStack pStack) {
+        Optional<Player> optional = pLlamaman.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_PLAYER);
+        if (optional.isPresent()) {
+            throwItemsTowardPlayer(pLlamaman, optional.get(), pStack);
+        } else {
+            throwItemsTowardRandomPos(pLlamaman, pStack);
+        }
+
+    }
+
+    public static void throwItemsTowardPlayer(LlamamanEntity pLlamaman, Player pPlayer, ItemStack pStack) {
+        throwItemsTowardPos(pLlamaman, pStack, pPlayer.position());
+    }
+
+    public static void throwItemsTowardPos(LlamamanEntity pLlamaman,  ItemStack pStack, Vec3 pPos) {
+
+                BehaviorUtils.throwItem(pLlamaman, pStack, pPos.add(0.0D, 1.0D, 0.0D));
+
+
+
+    }
+
+    private AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
+
+    public LlamamanEntity(EntityType<LlamamanEntity> pEntityType, Level pLevel) {
+        super(pEntityType, pLevel);
+    }
 
     public static AttributeSupplier setAttributes() {
         return Monster.createMobAttributes()
@@ -94,6 +136,9 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
 
 
     private boolean didSpit = false;
+    public   boolean isPassive = false;
+
+    private Player tradingPlayer;
 
 //    @Override
 //    protected void registerGoals() {
@@ -161,10 +206,20 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
     @Override
     public List<ExtendedSensor<LlamamanEntity>> getSensors() {
         return ObjectArrayList.of(
-                new NearbyLivingEntitySensor<>(), // This tracks nearby entities
+                new NearbyLivingEntitySensor().setPredicate((target, entity) ->
+                                target instanceof Player ||
+                                        target instanceof IronGolem ),
+
                 new HurtBySensor<>()                // This tracks the last damage source and attacker
         );
     }
+
+
+    public Brain<?> getBrain() {
+        return this.brain;
+    }
+
+
 
     @Override
     public BrainActivityGroup<LlamamanEntity> getCoreTasks() {
@@ -191,23 +246,25 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
     @Override
     public BrainActivityGroup<LlamamanEntity> getFightTasks() {
         return BrainActivityGroup.fightTasks(
-                new InvalidateAttackTarget<>().invalidateIf((entity, target) -> ((target instanceof Player pl
-                        && (pl.getAbilities().invulnerable
-                        || targetHasLlamaLeather(pl)))
-                        || distanceToSqr(target.position()) > Math.pow(getAttributeValue(Attributes.FOLLOW_RANGE), 2))
-                        && !(target instanceof LlamamanEntity)),
+                new InvalidateAttackTarget<>().invalidateIf(this::targetCheck),
                 new SetWalkTargetToAttackTarget<>(),
                 new AnimatableRangedAttack<>(20));
     }
 
-    boolean targetHasLlamaLeather(Player player){
+    boolean targetCheck(LivingEntity entity, LivingEntity target){
+        return ((target instanceof Player pl
+                && (pl.getAbilities().invulnerable
+                || targetHasLlamaLeather(pl)))
+                || distanceToSqr(target.position()) > Math.pow(getAttributeValue(Attributes.FOLLOW_RANGE), 2));
+    }
+
+     public static boolean targetHasLlamaLeather(Player player){
         AtomicBoolean hasLL = new AtomicBoolean(false);
         player.getArmorSlots().forEach(itemStack -> {
                   if(itemStack.getItem() instanceof  ArmorItem armorItem){
                       hasLL.set(armorItem.getMaterial() == ModArmorMaterials.LLAMA_LEATHER);
                   }
         });
-
         return  hasLL.get();
     }
 
@@ -221,6 +278,28 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
     @Override
     protected void customServerAiStep() {
         tickBrain(this);
+    }
+
+    @Nullable
+    @Override
+    public Player getTradingPlayer() {
+        return tradingPlayer;
+    }
+
+    @Override
+    public void setTradingPlayer(@Nullable Player player) {
+        tradingPlayer = player;
+    }
+
+    @Override
+    public Item getTradingItem() {
+        return Items.COPPER_INGOT;
+    }
+
+
+    @Override
+    public ResourceLocation getTradeLootTable() {
+        return null;
     }
 }
 

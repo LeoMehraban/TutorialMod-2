@@ -3,8 +3,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.entity.LlamamanEntity;
 import net.leomeh.tutorialmod.entity.ModEntityTypes;
+import net.leomeh.tutorialmod.entity.util.TradingMob;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
 import net.leomeh.tutorialmod.item.ModItems;
+import net.leomeh.tutorialmod.loot.LlamamanLoot;
 import net.leomeh.tutorialmod.networking.ModMessages;
 import net.leomeh.tutorialmod.networking.packet.DespawnC2SPacket;
 import net.leomeh.tutorialmod.networking.packet.SlotsDataSyncS2CPacket;
@@ -13,10 +15,13 @@ import net.leomeh.tutorialmod.slots.PlayerSlotsProvider;
 import net.leomeh.tutorialmod.villager.ModVillagers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -30,6 +35,7 @@ import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -62,6 +68,18 @@ public class ModEvents {
         public static void onLivingDeathEvent(LivingDeathEvent deathEvent){
             if(deathEvent.getEntity() instanceof  ServerPlayer player){
                 DespawnC2SPacket.doThing(player);
+            }
+        }
+
+        @SubscribeEvent
+        public static void whenThePlayerTradesWithLlamaMan(PlayerInteractEvent.EntityInteract event){
+            Player pPlayer = event.getEntity();
+            if(event.getTarget() instanceof TradingMob llamaman){
+                    if(!pPlayer.getCooldowns().isOnCooldown(llamaman.getTradingItem())) {
+                        if (llamaman.trade((PathfinderMob) llamaman, pPlayer, pPlayer.getItemInHand(InteractionHand.MAIN_HAND), LlamamanLoot.LOOT, (player -> LlamamanEntity.targetHasLlamaLeather(player)))) {
+                            pPlayer.getCooldowns().addCooldown(llamaman.getTradingItem(), 200);
+                        }
+                    }
             }
         }
 
