@@ -27,6 +27,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,8 +66,9 @@ public class TutorialMod {
         ModPlacedFeatures.register(modEventBus);
         ModEntityTypes.register(modEventBus);
         ModMenuTypes.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(ClientModEvents::onClientSetup);
+        //modEventBus.addListener(ClientModEvents::onClientSetup);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TutorialConfig.SPEC, "tutorialmod.toml");
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -85,7 +87,7 @@ public class TutorialMod {
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {

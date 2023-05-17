@@ -42,7 +42,7 @@ public class ModBlocks {
 
     public static  final RegistryObject<Block> CORE_GEM_DEEPSLATE_ORE = registerBlock("deepslate_core_gem_ore", () -> new Block(BlockBehaviour.Properties.of(Material.STONE).strength(6f).requiresCorrectToolForDrops()), CreativeModeTab.TAB_MISC);
 
-    public static  final RegistryObject<Block> WANDFORGER_TABLE = registerBlock("wandforger_table", () -> new WandForgerBlock(BlockBehaviour.Properties.of(Material.STONE).strength(4f)), CreativeModeTab.TAB_MISC);
+    public static  final RegistryObject<Block> WANDFORGER_TABLE = registerBlock("wand_forger_table", () -> new WandForgerBlock(BlockBehaviour.Properties.of(Material.STONE).strength(4f)), CreativeModeTab.TAB_MISC);
 
     public static  final RegistryObject<Block> DEATHSTEEL_BLOCK = registerBlock("deathsteel_block", () -> new DeathSteel(BlockBehaviour.Properties.of(Material.HEAVY_METAL).strength(4f).requiresCorrectToolForDrops()), CreativeModeTab.TAB_MISC);
 //

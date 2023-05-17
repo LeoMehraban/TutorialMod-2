@@ -41,8 +41,8 @@ public class WandForgerBlock extends BaseEntityBlock {
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof WandForger) {
-                NetworkHooks.openScreen(((ServerPlayer)pPlayer), (WandForger)entity, pPos);
+            if(entity instanceof WandForger wandForger) {
+                NetworkHooks.openScreen(((ServerPlayer)pPlayer), wandForger, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
