@@ -14,6 +14,9 @@ import net.leomeh.tutorialmod.networking.ModMessages;
 //import net.leomeh.tutorialmod.screen.slot.ModMenuTypes;
 //import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
 //import net.leomeh.tutorialmod.screen.slot.WandforgerMenu;
+import net.leomeh.tutorialmod.screen.WandforgerScreen;
+import net.leomeh.tutorialmod.screen.slot.ModMenuTypes;
+import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
 import net.leomeh.tutorialmod.villager.ModVillagers;
 import net.leomeh.tutorialmod.world.feature.ModConfiguredFeatures;
 import net.leomeh.tutorialmod.world.feature.ModPlacedFeatures;
@@ -21,6 +24,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
@@ -60,7 +64,9 @@ public class TutorialMod {
         ModConfiguredFeatures.register(modEventBus);
         ModPlacedFeatures.register(modEventBus);
         ModEntityTypes.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(ClientModEvents::onClientSetup);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TutorialConfig.SPEC, "tutorialmod.toml");
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -83,7 +89,7 @@ public class TutorialMod {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            //MenuScreens.register(ModMenuTypes.WANDFORGER_MENU.get(), new MenuType<WandForgerMenu>());
+            MenuScreens.register(ModMenuTypes.WANDFORGER_MENU.get(), WandforgerScreen::new);
         }
     }
 }

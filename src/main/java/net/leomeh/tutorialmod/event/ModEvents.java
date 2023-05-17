@@ -31,9 +31,13 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityMobGriefingEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -72,7 +76,7 @@ public class ModEvents {
         }
 
         @SubscribeEvent
-        public static void whenThePlayerTradesWithLlamaMan(PlayerInteractEvent.EntityInteract event){
+        public static void onInteract(PlayerInteractEvent.EntityInteract event){
             Player pPlayer = event.getEntity();
             if(event.getTarget() instanceof TradingMob llamaman){
                     if(!pPlayer.getCooldowns().isOnCooldown(llamaman.getTradingItem())) {
@@ -82,6 +86,15 @@ public class ModEvents {
                     }
             }
         }
+//        @SubscribeEvent
+//        public static void onDrop(ItemTossEvent event){
+//           if(event.getPlayer().getCooldowns().isOnCooldown(LlamamanEntity.getTradingItem2())){
+//               event.setCanceled(true);
+//           }
+//        }
+
+
+
 
         @SubscribeEvent
         public static void addCustomTrades(VillagerTradesEvent event) {

@@ -4,6 +4,7 @@ import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.block.ModBlocks;
 import net.leomeh.tutorialmod.item.custom.*;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -66,6 +67,11 @@ public class ModItems {
     public static final RegistryObject<Item>   DEATHSTEELLEGGINGS = ITEMS.register("deathsteel_leggings", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, EquipmentSlot.LEGS,new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1)));
 
     public static final RegistryObject<Item>   DEATHSTEELBOOTS = ITEMS.register("deathsteel_boots", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, EquipmentSlot.FEET,new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1)));
+
+    public static final RegistryObject<Item> CHEESE_BALL = ITEMS.register("cheese_ball" , () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).food(new FoodProperties.Builder()
+                    .nutrition(5)
+                    .saturationMod(3.1f)
+            .build())));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);

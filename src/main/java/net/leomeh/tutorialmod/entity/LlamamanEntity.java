@@ -4,25 +4,31 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.leomeh.tutorialmod.entity.util.TradingMob;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
 import net.leomeh.tutorialmod.item.ModItems;
+import net.leomeh.tutorialmod.loot.LlamamanLoot;
+import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
+import net.minecraft.world.entity.ai.behavior.GoToWantedItem;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
@@ -50,6 +56,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliat
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearestItemSensor;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -67,8 +74,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable, SmartBrainOwner<LlamamanEntity>, TradingMob {
-
+public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable, SmartBrainOwner<LlamamanEntity>, TradingMob, InventoryCarrier {
+    private static final Vec3i ITEM_PICKUP_REACH = new Vec3i(1, 1, 1);
 
     public List<LivingEntity> getNearbyLivingEntities(ServerLevel pLevel, LivingEntity pEntity){
         AABB aabb = pEntity.getBoundingBox().inflate((double)this.radiusXZ(), (double)this.radiusY(), (double)this.radiusXZ());
@@ -79,12 +86,29 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         return  list;
     }
 
+    public List<ItemEntity> getNearbyItemEntities(ServerLevel pLevel, LivingEntity pEntity){
+        AABB aabb = pEntity.getBoundingBox().inflate((double)this.radiusXZ(), (double)this.radiusY(), (double)this.radiusXZ());
+        List<ItemEntity> list = pLevel.getEntitiesOfClass(ItemEntity.class, aabb, (p_26717_) -> {
+            return p_26717_.isAlive();
+        });
+        list.sort(Comparator.comparingDouble(pEntity::distanceToSqr));
+        return  list;
+    }
+
+    @Override
+    protected Vec3i getPickupReach() {
+        return ITEM_PICKUP_REACH;
+    }
+
+
+
+    private final SimpleContainer inventory = new SimpleContainer(1);
     protected int radiusXZ() {
-        return 16;
+        return 1;
     }
 
     protected int radiusY() {
-        return 16;
+        return 1;
     }
 
     public static Vec3 getRandomNearbyPos(LlamamanEntity pLlamaman) {
@@ -133,7 +157,7 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
                 .add(Attributes.MOVEMENT_SPEED, 0.2f).build();
     }
 
-
+    public int tradeCooldown = 200;
 
     private boolean didSpit = false;
     public   boolean isPassive = false;
@@ -210,7 +234,8 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
                                 target instanceof Player ||
                                         target instanceof IronGolem ),
 
-                new HurtBySensor<>()                // This tracks the last damage source and attacker
+                new HurtBySensor<>(),
+                new NearestItemSensor<>()
         );
     }
 
@@ -237,10 +262,34 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
                         new SetPlayerLookTarget<>(),
                         new SetRandomLookTarget<>()
                 ),
+                new GoToWantedItem<>(1.0f, false,20),
                 new OneRandomBehaviour<>(
                         new SetRandomWalkTarget<>(),
                         new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60)))
                 );
+    }
+
+    @Override
+    public void tick() {
+        if(tradeCooldown != 0) {
+            tradeCooldown--;
+        }
+        super.tick();
+    }
+
+    @Override
+    public boolean wantsToPickUp(ItemStack pStack) {
+        return pStack.getItem() == Items.COPPER_INGOT;
+    }
+
+    @Override
+    protected void pickUpItem(ItemEntity pItemEntity) {
+        if(tradeCooldown == 0) {
+            this.tradeWithDroppedItem(this, pItemEntity, LlamamanLoot.LOOT);
+            //getTradingPlayer().getCooldowns().addCooldown(getTradingItem(), 200);
+            tradeCooldown = 200;
+            InventoryCarrier.pickUpItem(this, this, pItemEntity);
+        }
     }
 
     @Override
@@ -277,6 +326,12 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
 
     @Override
     protected void customServerAiStep() {
+        List<ItemEntity> nearbyItemEntities = getNearbyItemEntities((ServerLevel) this.level, this);
+        nearbyItemEntities.forEach((itemEntity -> {
+            if(itemEntity.getItem().getItem() == getTradingItem()) {
+                pickUpItem(itemEntity);
+            }
+        }));
         tickBrain(this);
     }
 
@@ -296,11 +351,21 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         return Items.COPPER_INGOT;
     }
 
+    public static Item getTradingItem2(){
+        return Items.COPPER_INGOT;
+    }
+
 
     @Override
     public ResourceLocation getTradeLootTable() {
         return null;
     }
+
+    @Override
+    public SimpleContainer getInventory() {
+        return inventory;
+    }
+
 }
 
 

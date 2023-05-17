@@ -29,7 +29,7 @@ public class ModLootUtils {
         }
         public ItemStack get(){
             ItemStack itemStack = new ItemStack(item);
-            itemStack.setCount((int) Math.floor(Math.random() * maxCount + (minCount - 1)));
+            itemStack.setCount((int) Math.floor(Math.random() * maxCount + (minCount)));
             return itemStack;
         }
     }

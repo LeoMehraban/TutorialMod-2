@@ -1,5 +1,6 @@
 package net.leomeh.tutorialmod.entity.util;
 
+
 import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.entity.LlamamanEntity;
 import net.leomeh.tutorialmod.loot.LlamamanLoot;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,6 +33,10 @@ import java.util.function.Predicate;
 //Code written by SkyJay
 
 public interface TradingMob {
+
+    default void tradeWithDroppedItem(PathfinderMob self, ItemEntity item1, ModLootUtils lootUtils){
+        getTradeResult((PathfinderMob) this, item1.getItem(), lootUtils).forEach(item -> BehaviorUtils.throwItem(self, item, getTradeTargetPosition(self, null)));
+    }
 
     /**
      * @return the player who is trading, or null if the mob is not trading
@@ -81,11 +87,10 @@ public interface TradingMob {
     /**
      * Creates a list of trade results by querying the loot table
      *
-     * @param player    the trading player
      * @param tradeItem the trade offering
      * @return a list of result items
      */
-    default List<ItemStack> getTradeResult(final PathfinderMob self, @Nullable final Player player, final ItemStack tradeItem, ModLootUtils lootTable) {
+    default List<ItemStack> getTradeResult(final PathfinderMob self, final ItemStack tradeItem, ModLootUtils lootTable) {
         if(tradeItem.getItem() == getTradingItem()) {
             return List.of(lootTable.getRandomValue());
         } else {
@@ -105,7 +110,7 @@ public interface TradingMob {
             final Vec3 tradeTargetPos = getTradeTargetPosition(self, player);
             // determine list of trade results
             // drop trade results as item entities
-            getTradeResult(self, player, tradeItem, lootUtils).forEach(item -> BehaviorUtils.throwItem(self, item, tradeTargetPos));
+            getTradeResult(self, tradeItem, lootUtils).forEach(item -> BehaviorUtils.throwItem(self, item, tradeTargetPos));
             // shrink/remove held item
             tradeItem.shrink(1);
             self.setItemInHand(InteractionHand.MAIN_HAND, tradeItem);
