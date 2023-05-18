@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 //import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -134,38 +135,39 @@ public class WandForger extends BlockEntity implements MenuProvider {
 
     private static boolean hasRecipe(WandForger entity) {
         Level level = entity.level;
-        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
-        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        if(!level.isClientSide()) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+            for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+                inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+            }
+
+            Optional<GemCuttingStationRecipe> recipe = serverLevel.getRecipeManager()
+                    .getRecipeFor(GemCuttingStationRecipe.Type.INSTANCE, inventory, serverLevel);
+            return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
+                    canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
+        } else {
+            return false;
         }
-
-        Optional<GemCuttingStationRecipe> match = level.getRecipeManager()
-                .getRecipeFor(GemCuttingStationRecipe.Type.INSTANCE, inventory, level);
-
-        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
-                && hasLivinginLivingSlot(entity) && hasCoreinCoreSlot(entity);
     }
 
-    private static void craftItem(WandForger entity) {
-        Level level = entity.level;
-        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
-        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+    private static void craftItem(WandForger pEntity) {
+        Level level = pEntity.level;
+        SimpleContainer inventory = new SimpleContainer(pEntity.itemHandler.getSlots());
+        for (int i = 0; i < pEntity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, pEntity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<GemCuttingStationRecipe> match = level.getRecipeManager()
+        Optional<GemCuttingStationRecipe> recipe = level.getRecipeManager()
                 .getRecipeFor(GemCuttingStationRecipe.Type.INSTANCE, inventory, level);
 
-        if(match.isPresent()) {
-            entity.itemHandler.extractItem(0,1, false);
-            entity.itemHandler.extractItem(1,1, false);
-            entity.itemHandler.getStackInSlot(2).hurt(1, RandomSource.create(), null);
+        if (hasRecipe(pEntity)) {
+            pEntity.itemHandler.extractItem(0, 1, false);
 
-            entity.itemHandler.setStackInSlot(3, new ItemStack(match.get().getResultItem().getItem(),
-                    entity.itemHandler.getStackInSlot(3).getCount() + 1));
+            pEntity.itemHandler.setStackInSlot(3, new ItemStack(recipe.get().getResultItem().getItem(),
+                    pEntity.itemHandler.getStackInSlot(2).getCount() + 1));
 
-            entity.resetProgress();
+            pEntity.resetProgress();
         }
     }
 

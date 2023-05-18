@@ -11,8 +11,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
     private final ResourceLocation id;
@@ -20,7 +19,7 @@ public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
     private final NonNullList<Ingredient> recipeItems;
 
     public GemCuttingStationRecipe(ResourceLocation id, ItemStack output,
-                                   NonNullList<Ingredient> recipeItems) {
+                                    NonNullList<Ingredient> recipeItems) {
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
@@ -28,7 +27,16 @@ public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
 
     @Override
     public boolean matches(SimpleContainer pContainer, Level pLevel) {
+        if(pLevel.isClientSide()) {
+            return false;
+        }
+
         return recipeItems.get(0).test(pContainer.getItem(1));
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return recipeItems;
     }
 
     @Override
@@ -64,30 +72,31 @@ public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
     public static class Type implements RecipeType<GemCuttingStationRecipe> {
         private Type() { }
         public static final Type INSTANCE = new Type();
-        public static final String ID = "gem_cutting";
+        public static final String ID = "wandforger";
     }
+
 
     public static class Serializer implements RecipeSerializer<GemCuttingStationRecipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID =
-                new ResourceLocation(TutorialMod.MOD_ID,"gem_cutting");
+                new ResourceLocation(TutorialMod.MOD_ID, "wandforger");
 
         @Override
-        public GemCuttingStationRecipe fromJson(ResourceLocation id, JsonObject json) {
-            ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
+        public GemCuttingStationRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
+            ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "output"));
 
-            JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
+            JsonArray ingredients = GsonHelper.getAsJsonArray(pSerializedRecipe, "ingredients");
             NonNullList<Ingredient> inputs = NonNullList.withSize(1, Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new GemCuttingStationRecipe(id, output, inputs);
+            return new GemCuttingStationRecipe(pRecipeId, output, inputs);
         }
 
         @Override
-        public GemCuttingStationRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+        public @Nullable GemCuttingStationRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
             NonNullList<Ingredient> inputs = NonNullList.withSize(buf.readInt(), Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
@@ -99,18 +108,13 @@ public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, GemCuttingStationRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf,GemCuttingStationRecipe recipe) {
             buf.writeInt(recipe.getIngredients().size());
+
             for (Ingredient ing : recipe.getIngredients()) {
                 ing.toNetwork(buf);
             }
             buf.writeItemStack(recipe.getResultItem(), false);
-        }
-
-
-        @SuppressWarnings("unchecked") // Need this wrapper, because generics
-        private static <G> Class<G> castClass(Class<?> cls) {
-            return (Class<G>)cls;
         }
     }
 }
