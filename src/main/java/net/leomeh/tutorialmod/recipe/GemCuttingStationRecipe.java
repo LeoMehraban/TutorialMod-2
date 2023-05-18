@@ -7,13 +7,14 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
+public class GemCuttingStationRecipe implements Recipe<Container> {
     private final ResourceLocation id;
     private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
@@ -25,8 +26,14 @@ public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
         this.recipeItems = recipeItems;
     }
 
+
+
     @Override
-    public boolean matches(SimpleContainer pContainer, Level pLevel) {
+    public NonNullList<Ingredient> getIngredients() {
+        return recipeItems;
+    }
+    @Override
+    public boolean matches(Container pContainer, Level pLevel) {
         if(pLevel.isClientSide()) {
             return false;
         }
@@ -35,13 +42,8 @@ public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return recipeItems;
-    }
-
-    @Override
-    public ItemStack assemble(SimpleContainer pContainer) {
-        return output;
+    public ItemStack assemble(Container pContainer) {
+        return null;
     }
 
     @Override
@@ -61,12 +63,12 @@ public class GemCuttingStationRecipe implements Recipe<SimpleContainer> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Serializer.INSTANCE;
+        return ModRecipes.GEM_INFUSING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Type.INSTANCE;
+        return ModRecipes.WANDFORGER_TYPE.get();
     }
 
     public static class Type implements RecipeType<GemCuttingStationRecipe> {

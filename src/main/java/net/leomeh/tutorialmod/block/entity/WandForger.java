@@ -3,6 +3,7 @@ import net.leomeh.tutorialmod.block.entity.ModBlockEntities;
 import net.leomeh.tutorialmod.crafting.WandForgingList;
 import net.leomeh.tutorialmod.item.ModItems;
 import net.leomeh.tutorialmod.recipe.GemCuttingStationRecipe;
+import net.leomeh.tutorialmod.recipe.ModRecipes;
 import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,6 +12,7 @@ import net.minecraft.network.chat.Component;
 //import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -32,6 +34,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
@@ -80,7 +83,7 @@ public class WandForger extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new WandForgerMenu(pContainerId, pInventory,pPlayer.level.getBlockEntity(this.getBlockPos()), this.data);
+        return new WandForgerMenu(pContainerId, pInventory,pPlayer.level.getBlockEntity(this.getBlockPos()), this.data, lazyItemHandler.orElse(null));
     }
     @Nonnull
     @Override
@@ -135,20 +138,18 @@ public class WandForger extends BlockEntity implements MenuProvider {
 
     private static boolean hasRecipe(WandForger entity) {
         Level level = entity.level;
-        if(!level.isClientSide()) {
-            ServerLevel serverLevel = (ServerLevel) level;
-            SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+
+            //ServerLevel serverLevel = (ServerLevel) level;
+            Container inventory = new RecipeWrapper(entity.itemHandler);
             for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
                 inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
             }
 
-            Optional<GemCuttingStationRecipe> recipe = serverLevel.getRecipeManager()
-                    .getRecipeFor(GemCuttingStationRecipe.Type.INSTANCE, inventory, serverLevel);
+            Optional<GemCuttingStationRecipe> recipe = level.getRecipeManager()
+                    .getRecipeFor(ModRecipes.WANDFORGER_TYPE.get(),inventory, level);
             return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
                     canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
-        } else {
-            return false;
-        }
+
     }
 
     private static void craftItem(WandForger pEntity) {
@@ -159,7 +160,7 @@ public class WandForger extends BlockEntity implements MenuProvider {
         }
 
         Optional<GemCuttingStationRecipe> recipe = level.getRecipeManager()
-                .getRecipeFor(GemCuttingStationRecipe.Type.INSTANCE, inventory, level);
+                .getRecipeFor(ModRecipes.WANDFORGER_TYPE.get(), inventory, level);
 
         if (hasRecipe(pEntity)) {
             pEntity.itemHandler.extractItem(0, 1, false);
@@ -175,11 +176,11 @@ public class WandForger extends BlockEntity implements MenuProvider {
         this.progress = 0;
     }
 
-    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack output) {
+    private static boolean canInsertItemIntoOutputSlot(Container inventory, ItemStack output) {
         return inventory.getItem(3).getItem() == output.getItem() || inventory.getItem(3).isEmpty();
     }
 
-    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
+    private static boolean canInsertAmountIntoOutputSlot(Container inventory) {
         return inventory.getItem(3).getMaxStackSize() > inventory.getItem(3).getCount();
     }
 

@@ -9,7 +9,10 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class WandForgerMenu extends AbstractContainerMenu {
@@ -17,12 +20,12 @@ public class WandForgerMenu extends AbstractContainerMenu {
     private Level level = null;
 
     public WandForgerMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2), new ItemStackHandler(3));
     }
 
     private final ContainerData data;
 
-    public WandForgerMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
+    public WandForgerMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data, IItemHandler handler) {
         super(ModMenuTypes.WANDFORGER_MENU.get(), pContainerId);
         checkContainerSize(inv, 4);
         blockEntity = ((WandForger) entity);
@@ -32,12 +35,14 @@ public class WandForgerMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 34, 40));
-            this.addSlot(new SlotItemHandler(handler, 1, 57, 18));
-            this.addSlot(new SlotItemHandler(handler, 2, 103, 18));
-            this.addSlot(new ModResultSlot(handler, 3, 80, 60));
-        });
+
+//
+//        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+        this.addSlot(new SlotItemHandler(handler, 0, 34, 40));
+        this.addSlot(new SlotItemHandler(handler, 1, 57, 18));
+        this.addSlot(new SlotItemHandler(handler, 2, 103,18));
+        this.addSlot(new ModResultSlot  (handler, 3, 80, 60           ));
+//        });
 
         addDataSlots(data);
     }

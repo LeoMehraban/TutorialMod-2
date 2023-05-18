@@ -1,7 +1,6 @@
 package net.leomeh.tutorialmod.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-//import net.kaupenjoe.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -11,10 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class WandforgerScreen extends AbstractContainerScreen<WandForgerMenu>{
-
-
-
-
         private static final ResourceLocation TEXTURE =
                 new ResourceLocation(TutorialMod.MOD_ID, "textures/gui/wandforger_gui.png");
 
