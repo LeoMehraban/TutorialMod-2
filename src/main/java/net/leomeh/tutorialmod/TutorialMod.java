@@ -14,6 +14,7 @@ import net.leomeh.tutorialmod.networking.ModMessages;
 //import net.leomeh.tutorialmod.screen.slot.ModMenuTypes;
 //import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
 //import net.leomeh.tutorialmod.screen.slot.WandforgerMenu;
+import net.leomeh.tutorialmod.recipe.ModRecipes;
 import net.leomeh.tutorialmod.screen.WandforgerScreen;
 import net.leomeh.tutorialmod.screen.slot.ModMenuTypes;
 import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
@@ -67,6 +68,7 @@ public class TutorialMod {
         ModEntityTypes.register(modEventBus);
         ModMenuTypes.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModRecipes.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
         //modEventBus.addListener(ClientModEvents::onClientSetup);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TutorialConfig.SPEC, "tutorialmod.toml");

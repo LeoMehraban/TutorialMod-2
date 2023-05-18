@@ -1,7 +1,7 @@
 {
  "variants": {
     "": {
-      "model":  "tutorialmod:block/wandforger_table"
+      "model":  "tutorialmod:block/wand_forger_table"
     }
  }
 }

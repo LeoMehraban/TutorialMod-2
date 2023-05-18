@@ -10,9 +10,11 @@ import net.leomeh.tutorialmod.loot.LlamamanLoot;
 import net.leomeh.tutorialmod.networking.ModMessages;
 import net.leomeh.tutorialmod.networking.packet.DespawnC2SPacket;
 import net.leomeh.tutorialmod.networking.packet.SlotsDataSyncS2CPacket;
+import net.leomeh.tutorialmod.recipe.GemCuttingStationRecipe;
 import net.leomeh.tutorialmod.slots.PlayerSlots;
 import net.leomeh.tutorialmod.slots.PlayerSlotsProvider;
 import net.leomeh.tutorialmod.villager.ModVillagers;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +27,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -43,6 +46,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.NewRegistryEvent;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -211,6 +215,11 @@ public class ModEvents {
         public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
             event.put(ModEntityTypes.CHOMPER.get(), LlamamanEntity.setAttributes());
         }
+
+//        @SubscribeEvent
+//        public static void registerRecipeTypes(final RegistryEvent.Register<RecipeSerializer<?>> event) {
+//            Registry.register(Registry.RECIPE_TYPE, GemCuttingStationRecipe.Type.ID, GemCuttingStationRecipe.Type.INSTANCE);
+//        }
 
     }
 }

@@ -2,6 +2,7 @@ package net.leomeh.tutorialmod.item;
 
 import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.block.ModBlocks;
+import net.leomeh.tutorialmod.entity.ModEntityTypes;
 import net.leomeh.tutorialmod.item.custom.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
@@ -72,6 +73,9 @@ public class ModItems {
                     .nutrition(5)
                     .saturationMod(3.1f)
             .build())));
+
+    public static final RegistryObject<Item> SPAWN_EGG_LLAMAMAN = ITEMS.register("llamaman_spawn_egg", () -> new SpawnEggItem(ModEntityTypes.CHOMPER.get(),0xffffff , 0xffffe6, new Item.Properties().tab(CreativeModeTab.TAB_MISC)
+    ));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
