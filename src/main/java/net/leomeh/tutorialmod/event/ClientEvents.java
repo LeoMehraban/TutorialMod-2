@@ -2,17 +2,13 @@ package net.leomeh.tutorialmod.event;
 
 import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.client.SlotsHudOverlay;
-import net.leomeh.tutorialmod.entity.Llamaman;
-import net.leomeh.tutorialmod.entity.LlamamanEntity;
-import net.leomeh.tutorialmod.entity.LlamamanLayer;
+import net.leomeh.tutorialmod.entity.llamaman.LlamamanLayer;
 import net.leomeh.tutorialmod.entity.ModEntityTypes;
 import net.leomeh.tutorialmod.networking.ModMessages;
 import net.leomeh.tutorialmod.networking.packet.DespawnC2SPacket;
 import net.leomeh.tutorialmod.util.KeyBinding;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;

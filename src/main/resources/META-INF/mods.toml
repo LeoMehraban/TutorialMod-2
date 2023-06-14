@@ -29,7 +29,7 @@ displayName="Tutorial Mod" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Kapuanjoe made the tutorial template I'm using" #optional
+credits="While most of the code in this and other files were written by me, some code was written by KaupenJoe. Huge thanks to him and his tutorials. Also, a small amount of code was witten by SkyJay. some help and ideas were provided by Emmymonchy on the PyreMarten discord server. Emmy also helped with building the Llamaman camps. Thanks to the MMD for providing java help in times of need. Thanks to Jacqueline Vile and TigerJess for the textures and animations of the Llama-Man- Leo Mehraban, May 4, 2023" #optional
 # A text field displayed in the mod UI
 authors="LeoMeh314" #optional
 # Display Test controls the display for your mod in the server connection screen

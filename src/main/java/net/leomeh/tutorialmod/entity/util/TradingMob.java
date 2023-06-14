@@ -1,14 +1,11 @@
 package net.leomeh.tutorialmod.entity.util;
 
 
-import net.leomeh.tutorialmod.TutorialMod;
-import net.leomeh.tutorialmod.entity.LlamamanEntity;
-import net.leomeh.tutorialmod.loot.LlamamanLoot;
+import net.leomeh.tutorialmod.entity.llamaman.LlamamanEntity;
 import net.leomeh.tutorialmod.loot.ModLootUtils;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -19,11 +16,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;

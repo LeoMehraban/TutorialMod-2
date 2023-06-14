@@ -1,6 +1,6 @@
 {
   "type": "forge:add_features",
   "biomes": "#minecraft:is_overworld",
-  "features": "tutorialmod:core_gem_ore_placed",
+  "features": "tutorialmod:overworld_core_gem_ore",
   "step": "underground_ores"
 }

@@ -1,6 +1,5 @@
 package net.leomeh.tutorialmod.item.custom.spit_gun;
 //package net.leomeh.tutorialmod.entity;
-import net.leomeh.tutorialmod.entity.LlamamanEntity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
@@ -8,7 +7,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -33,6 +31,18 @@ public class GunSpit extends Projectile {
     /**
      * Called to update the entity's position/logic.
      */
+    public double getY(double pScale, Vec3 vec3) {
+        return vec3.y() + (double)this.getBbHeight() * pScale;
+    }
+
+    public void shootFromRotation(Entity pShooter, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
+        float f = -Mth.sin(pY * ((float)Math.PI / 180F)) * Mth.cos(pX * ((float)Math.PI / 180F));
+        float f1 = -Mth.sin((pX + pZ) * ((float)Math.PI / 180F));
+        float f2 = Mth.cos(pY * ((float)Math.PI / 180F)) * Mth.cos(pX * ((float)Math.PI / 180F));
+        this.shoot((double)f, (double)f1, (double)f2, pVelocity, pInaccuracy);
+        Vec3 vec3 = pShooter.getDeltaMovement();
+        this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, pShooter.isOnGround() ? 0.0D : vec3.y, vec3.z));
+    }
     public void tick() {
         super.tick();
         Vec3 vec3 = this.getDeltaMovement();

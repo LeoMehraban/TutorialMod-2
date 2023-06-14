@@ -4,6 +4,7 @@ package net.leomeh.tutorialmod.entity;
 
 import net.leomeh.tutorialmod.TutorialMod;
 
+import net.leomeh.tutorialmod.entity.llamaman.LlamamanEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

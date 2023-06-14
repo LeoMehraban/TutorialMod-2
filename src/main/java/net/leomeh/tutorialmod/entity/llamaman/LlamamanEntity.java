@@ -1,33 +1,30 @@
-package net.leomeh.tutorialmod.entity;
+package net.leomeh.tutorialmod.entity.llamaman;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.leomeh.tutorialmod.entity.ai.GoToItem;
 import net.leomeh.tutorialmod.entity.util.TradingMob;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
-import net.leomeh.tutorialmod.item.ModItems;
 import net.leomeh.tutorialmod.loot.LlamamanLoot;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.behavior.GoToWantedItem;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.animal.Turtle;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -44,7 +41,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.attack.AnimatableRangedAttack;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.CustomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
@@ -58,15 +54,11 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearestItemSensor;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Comparator;
 import java.util.List;
@@ -74,7 +66,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IAnimatable, SmartBrainOwner<LlamamanEntity>, TradingMob, InventoryCarrier {
+public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, GeoAnimatable, SmartBrainOwner<LlamamanEntity>, TradingMob, InventoryCarrier {
+    private int ticks = 0;
     private static final Vec3i ITEM_PICKUP_REACH = new Vec3i(1, 1, 1);
 
     public List<LivingEntity> getNearbyLivingEntities(ServerLevel pLevel, LivingEntity pEntity){
@@ -135,14 +128,10 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
     }
 
     public static void throwItemsTowardPos(LlamamanEntity pLlamaman,  ItemStack pStack, Vec3 pPos) {
-
-                BehaviorUtils.throwItem(pLlamaman, pStack, pPos.add(0.0D, 1.0D, 0.0D));
-
-
-
+        BehaviorUtils.throwItem(pLlamaman, pStack, pPos.add(0.0D, 1.0D, 0.0D));
     }
 
-    private AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
 
 
     public LlamamanEntity(EntityType<LlamamanEntity> pEntityType, Level pLevel) {
@@ -156,6 +145,7 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
                 .add(Attributes.ATTACK_SPEED, 0.4f)
                 .add(Attributes.MOVEMENT_SPEED, 0.2f).build();
     }
+
 
     public int tradeCooldown = 200;
 
@@ -207,25 +197,16 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
     }
 
 
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        if (event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("Walk", ILoopType.EDefaultLoopTypes.LOOP));
+    private PlayState predicate(AnimationState animationState) {
+        if(animationState.isMoving()) {
+            animationState.getController().setAnimation(RawAnimation.begin().then("Walk", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("Idle", ILoopType.EDefaultLoopTypes.LOOP));
+        animationState.getController().setAnimation(RawAnimation.begin().then("Idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
-    @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",
-                0, this::predicate));
-    }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
-    }
 
     @Override
     public List<ExtendedSensor<LlamamanEntity>> getSensors() {
@@ -262,8 +243,8 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
                         new SetPlayerLookTarget<>(),
                         new SetRandomLookTarget<>()
                 ),
-                new GoToWantedItem<>(1.0f, false,20),
-                new OneRandomBehaviour<>(
+                new GoToItem(),
+                new OneRandomBehaviour<LlamamanEntity>(
                         new SetRandomWalkTarget<>(),
                         new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60)))
                 );
@@ -274,6 +255,7 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         if(tradeCooldown != 0) {
             tradeCooldown--;
         }
+        ticks++;
         super.tick();
     }
 
@@ -351,10 +333,7 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         return Items.COPPER_INGOT;
     }
 
-    public static Item getTradingItem2(){
-        return Items.COPPER_INGOT;
-    }
-
+    //public static Item getTradingItem2(){return Items.COPPER_INGOT;}
 
     @Override
     public ResourceLocation getTradeLootTable() {
@@ -366,6 +345,18 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, IA
         return inventory;
     }
 
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController(this, "controller", 0, this::predicate));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return factory;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return ticks;
+    }
 }
-
-

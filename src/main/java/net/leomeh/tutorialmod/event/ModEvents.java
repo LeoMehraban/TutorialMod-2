@@ -1,7 +1,7 @@
 package net.leomeh.tutorialmod.event;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.leomeh.tutorialmod.TutorialMod;
-import net.leomeh.tutorialmod.entity.LlamamanEntity;
+import net.leomeh.tutorialmod.entity.llamaman.LlamamanEntity;
 import net.leomeh.tutorialmod.entity.ModEntityTypes;
 import net.leomeh.tutorialmod.entity.util.TradingMob;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
@@ -10,15 +10,12 @@ import net.leomeh.tutorialmod.loot.LlamamanLoot;
 import net.leomeh.tutorialmod.networking.ModMessages;
 import net.leomeh.tutorialmod.networking.packet.DespawnC2SPacket;
 import net.leomeh.tutorialmod.networking.packet.SlotsDataSyncS2CPacket;
-import net.leomeh.tutorialmod.recipe.GemCuttingStationRecipe;
 import net.leomeh.tutorialmod.slots.PlayerSlots;
 import net.leomeh.tutorialmod.slots.PlayerSlotsProvider;
 import net.leomeh.tutorialmod.villager.ModVillagers;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -27,29 +24,20 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityMobGriefingEvent;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.NewRegistryEvent;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class ModEvents {

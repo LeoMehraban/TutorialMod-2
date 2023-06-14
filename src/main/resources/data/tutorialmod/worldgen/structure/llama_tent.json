@@ -1,6 +1,6 @@
 {
 
-"type": "minecraft:jigsaw",
+"type": "tutorialmod:llama_tent",
 
 
 "start_pool": "tutorialmod:llama_tent/start_pool",
@@ -34,7 +34,7 @@
     "spawns": [
       {
         "type": "tutorialmod:llamaman",
-        "weight": 1,
+        "weight": 100,
         "minCount": 1,
         "maxCount": 4
       }

@@ -2,34 +2,25 @@ package net.leomeh.tutorialmod;
 
 import com.mojang.logging.LogUtils;
 import net.leomeh.tutorialmod.block.ModBlocks;
-//import net.leomeh.tutorialmod.block.entity.ModBlockEntities;
 import net.leomeh.tutorialmod.block.entity.ModBlockEntities;
 import net.leomeh.tutorialmod.client.SlotsHudOverlay;
 import net.leomeh.tutorialmod.config.TutorialConfig;
-//import net.leomeh.tutorialmod.effect.ModEffects;
-//import net.leomeh.tutorialmod.entity.ModEntityTypes;
 import net.leomeh.tutorialmod.entity.ModEntityTypes;
+import net.leomeh.tutorialmod.item.ModCreativeModeTab;
 import net.leomeh.tutorialmod.item.ModItems;
 import net.leomeh.tutorialmod.networking.ModMessages;
-//import net.leomeh.tutorialmod.screen.slot.ModMenuTypes;
-//import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
-//import net.leomeh.tutorialmod.screen.slot.WandforgerMenu;
 import net.leomeh.tutorialmod.recipe.ModRecipes;
 import net.leomeh.tutorialmod.screen.WandforgerScreen;
 import net.leomeh.tutorialmod.screen.slot.ModMenuTypes;
-import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
 import net.leomeh.tutorialmod.villager.ModVillagers;
-import net.leomeh.tutorialmod.world.feature.ModConfiguredFeatures;
-import net.leomeh.tutorialmod.world.feature.ModPlacedFeatures;
+import net.leomeh.tutorialmod.world.structure.ModStructures;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -63,14 +54,13 @@ public class TutorialMod {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModVillagers.register(modEventBus);
-        ModConfiguredFeatures.register(modEventBus);
-        ModPlacedFeatures.register(modEventBus);
         ModEntityTypes.register(modEventBus);
         ModMenuTypes.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModRecipes.register(modEventBus);
+        ModStructures.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
-        //modEventBus.addListener(ClientModEvents::onClientSetup);
+        modEventBus.addListener(this::addCreative);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TutorialConfig.SPEC, "tutorialmod.toml");
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -94,6 +84,19 @@ public class TutorialMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(ModMenuTypes.WANDFORGER_MENU.get(), WandforgerScreen::new);
+        }
+    }
+
+    private void addCreative(CreativeModeTabEvent.BuildContents event) {
+        if(event.getTab() == ModCreativeModeTab.TUTORIAL_TAB){
+            ModItems.ITEMS.getEntries().forEach((item) -> {
+                event.accept(item.get());
+            });
+            ModBlocks.BLOCKS.getEntries().forEach((blockRegistryObject) -> {
+                if(blockRegistryObject.get() != ModBlocks.STONECROP.get()) {
+                    event.accept(blockRegistryObject.get().asItem());
+                }
+            });
         }
     }
 }

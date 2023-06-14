@@ -1,11 +1,8 @@
 package net.leomeh.tutorialmod.item.custom.spit_gun;
 
-import net.leomeh.tutorialmod.entity.LlamamanSpit;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,19 +16,18 @@ public class SpitGun extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-
+        spit(pPlayer);
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 
-    private void spit(BlockPos pTarget, Player shooter) {
-        GunSpit llamaspit = new GunSpit(shooter.level, shooter);
-        double d0 = pTarget.getX() - shooter.getX();
-        double d1 = pTarget.getY() - llamaspit.getY();
-        double d2 = pTarget.getZ() - shooter.getZ();
-        double d3 = Math.sqrt(d0 * d0 + d2 * d2) * (double) 0.2F;
-        llamaspit.shoot(d0, d1 + d3, d2, 1.5F, 10.0F);
-
-        shooter.level.addFreshEntity(llamaspit);
+    private void spit(Player shooter) {
+        if(!shooter.level.isClientSide) {
+            GunSpit llamaspit = new GunSpit(shooter.level, shooter);
+            llamaspit.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0.0F, 3.0F, 1.0F);
+            shooter.level.addFreshEntity(llamaspit);
+        }
 
     }
+
+
 }

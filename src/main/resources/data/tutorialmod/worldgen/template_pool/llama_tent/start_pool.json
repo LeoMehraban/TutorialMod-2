@@ -2,7 +2,7 @@
 
 "name": "tutorialmod:llama_tent/start_pool",
 
-"fallback": "tutorialmod:llama_tent",
+"fallback": "minecraft:empty",
 
 "elements": [
   {
