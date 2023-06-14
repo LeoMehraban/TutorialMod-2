@@ -2,7 +2,6 @@ package net.leomeh.tutorialmod.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.leomeh.tutorialmod.TutorialMod;
-import net.leomeh.tutorialmod.screen.slot.WandForgerMenu;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;

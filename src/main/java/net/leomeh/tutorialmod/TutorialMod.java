@@ -11,7 +11,7 @@ import net.leomeh.tutorialmod.item.ModItems;
 import net.leomeh.tutorialmod.networking.ModMessages;
 import net.leomeh.tutorialmod.recipe.ModRecipes;
 import net.leomeh.tutorialmod.screen.WandforgerScreen;
-import net.leomeh.tutorialmod.screen.slot.ModMenuTypes;
+import net.leomeh.tutorialmod.screen.ModMenuTypes;
 import net.leomeh.tutorialmod.villager.ModVillagers;
 import net.leomeh.tutorialmod.world.structure.ModStructures;
 import net.minecraft.client.gui.screens.MenuScreens;

@@ -1,4 +1,4 @@
-package net.leomeh.tutorialmod.screen.slot;
+package net.leomeh.tutorialmod.screen;
 
 import net.leomeh.tutorialmod.TutorialMod;
 import net.minecraft.world.inventory.AbstractContainerMenu;
