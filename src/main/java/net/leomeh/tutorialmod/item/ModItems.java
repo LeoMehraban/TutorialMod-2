@@ -44,14 +44,14 @@ public class ModItems {
     public static final RegistryObject<Item>   DOGSUMMONWAND = ITEMS.register("summonwand_dog", () -> new DogSummonWand(new Item.Properties().stacksTo(1).durability(200)));
 
     public static final RegistryObject<Item>   ALLAYSUMMONWAND = ITEMS.register("summonwand_allay", () -> new AllaySummonWand(new Item.Properties().stacksTo(1).durability(200)));
-    public static final RegistryObject<Item>   LIVINGHELMET = ITEMS.register("living_helmet", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.HEAD,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   LIVINGHELMET = ITEMS.register("living_helmet", () -> new LivingArmorItem(ModArmorMaterials.LIVING, ArmorItem.Type.HELMET,new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item>   LLAMA_LEATHER_HELMET = ITEMS.register("llama_leather_helmet", () -> new ArmorItem(ModArmorMaterials.LLAMA_LEATHER, EquipmentSlot.HEAD,new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item>   LIVINGCHESTPLATE = ITEMS.register("living_chestplate", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.CHEST,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   LLAMA_LEATHER_HELMET = ITEMS.register("llama_leather_helmet", () -> new ArmorItem(ModArmorMaterials.LLAMA_LEATHER, ArmorItem.Type.HELMET,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   LIVINGCHESTPLATE = ITEMS.register("living_chestplate", () -> new LivingArmorItem(ModArmorMaterials.LIVING, ArmorItem.Type.CHESTPLATE,new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item>   LIVINGLEGGINGS = ITEMS.register("living_leggings", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.LEGS,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   LIVINGLEGGINGS = ITEMS.register("living_leggings", () -> new LivingArmorItem(ModArmorMaterials.LIVING, ArmorItem.Type.LEGGINGS,new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item>   LIVINGBOOTS = ITEMS.register("living_boots", () -> new LivingArmorItem(ModArmorMaterials.LIVING, EquipmentSlot.FEET,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   LIVINGBOOTS = ITEMS.register("living_boots", () -> new LivingArmorItem(ModArmorMaterials.LIVING, ArmorItem.Type.BOOTS,new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item>   DEATHSTEELPICKAXE = ITEMS.register("deathsteel_pickaxe", () -> new PickaxeItem(ModTiers.DEATHSTEEL,1,3,new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item>   DEATHSTEELSHOVEL = ITEMS.register("deathsteel_shovel", () -> new ShovelItem(ModTiers.DEATHSTEEL,1,3,new Item.Properties().stacksTo(1)));
@@ -64,12 +64,12 @@ public class ModItems {
     public static final RegistryObject<Item>   DEATHSTEEL_SWORD = ITEMS.register("deathsteel_sword", () -> new DeathSteelSword(ModTiers.DEATHSTEEL,2,3,new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item>   CATSUMMONWAND = ITEMS.register("summonwand_cat", () -> new CatSummonWand(new Item.Properties().stacksTo(1).durability(200)));
 
-    public static final RegistryObject<Item>   DEATHSTEELHELMET = ITEMS.register("deathsteel_helmet", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, EquipmentSlot.HEAD,new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item>   DEATHSTEELCHESTPLATE = ITEMS.register("deathsteel_chestplate", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, EquipmentSlot.CHEST,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   DEATHSTEELHELMET = ITEMS.register("deathsteel_helmet", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, ArmorItem.Type.HELMET,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   DEATHSTEELCHESTPLATE = ITEMS.register("deathsteel_chestplate", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, ArmorItem.Type.CHESTPLATE,new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item>   DEATHSTEELLEGGINGS = ITEMS.register("deathsteel_leggings", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, EquipmentSlot.LEGS,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   DEATHSTEELLEGGINGS = ITEMS.register("deathsteel_leggings", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, ArmorItem.Type.LEGGINGS,new Item.Properties().stacksTo(1)));
 
-    public static final RegistryObject<Item>   DEATHSTEELBOOTS = ITEMS.register("deathsteel_boots", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, EquipmentSlot.FEET,new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item>   DEATHSTEELBOOTS = ITEMS.register("deathsteel_boots", () -> new ArmorItem(ModArmorMaterials.DEATHSTEEL, ArmorItem.Type.BOOTS,new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> CHEESE_BALL = ITEMS.register("cheese_ball" , () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(5)

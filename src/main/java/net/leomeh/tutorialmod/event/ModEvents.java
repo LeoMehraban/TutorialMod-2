@@ -1,8 +1,9 @@
 package net.leomeh.tutorialmod.event;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.leomeh.tutorialmod.TutorialMod;
-import net.leomeh.tutorialmod.entity.llamaman.LlamamanEntity;
 import net.leomeh.tutorialmod.entity.ModEntityTypes;
+import net.leomeh.tutorialmod.entity.llamaman.LlamamanEntity;
 import net.leomeh.tutorialmod.entity.util.TradingMob;
 import net.leomeh.tutorialmod.item.ModArmorMaterials;
 import net.leomeh.tutorialmod.item.ModItems;
@@ -12,7 +13,6 @@ import net.leomeh.tutorialmod.networking.packet.DespawnC2SPacket;
 import net.leomeh.tutorialmod.networking.packet.SlotsDataSyncS2CPacket;
 import net.leomeh.tutorialmod.slots.PlayerSlots;
 import net.leomeh.tutorialmod.slots.PlayerSlotsProvider;
-import net.leomeh.tutorialmod.villager.ModVillagers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +23,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -88,47 +90,47 @@ public class ModEvents {
 
 
 
-        @SubscribeEvent
-        public static void addCustomTrades(VillagerTradesEvent event) {
-            if (event.getType() == ModVillagers.WANDFORGER.get()) {
-                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-                ItemStack stack = new ItemStack(ModItems.BONEBINDING.get(), 1);
-                int villagerLevel = 1;
-
-                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
-                        new ItemStack(Items.EMERALD, 2),
-                        stack, 10, 8, 0.02F));
-            }
-
-            if (event.getType() == ModVillagers.WANDFORGER.get()) {
-                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-                ItemStack stack = new ItemStack(ModItems.LIVINGSTONE_PEBBLE.get(), 15);
-                int villagerLevel = 1;
-
-                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
-                        new ItemStack(Items.EMERALD, 5),
-                        stack, 10, 8, 0.02F));
-            }
-            if (event.getType() == ModVillagers.WANDFORGER.get()) {
-                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-                ItemStack stack = new ItemStack(Items.EMERALD, 10);
-                int villagerLevel = 2;
-
-                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
-                        new ItemStack(ModItems.LIVINGINGOT.get(), 2),
-                        stack, 10, 8, 0.02F));
-            }
-
-            if (event.getType() == ModVillagers.WANDFORGER.get()) {
-                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-                ItemStack stack = new ItemStack(ModItems.DOGSUMMONWAND.get(), 1);
-                int villagerLevel = 2;
-
-                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
-                        new ItemStack(Items.EMERALD, 5),
-                        stack, 10, 8, 0.02F));
-            }
-        }
+//        @SubscribeEvent
+//        public static void addCustomTrades(VillagerTradesEvent event) {
+//            if (event.getType() == ModVillagers.WANDFORGER.get()) {
+//                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
+//                ItemStack stack = new ItemStack(ModItems.BONEBINDING.get(), 1);
+//                int villagerLevel = 1;
+//
+//                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
+//                        new ItemStack(Items.EMERALD, 2),
+//                        stack, 10, 8, 0.02F));
+//            }
+//
+//            if (event.getType() == ModVillagers.WANDFORGER.get()) {
+//                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
+//                ItemStack stack = new ItemStack(ModItems.LIVINGSTONE_PEBBLE.get(), 15);
+//                int villagerLevel = 1;
+//
+//                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
+//                        new ItemStack(Items.EMERALD, 5),
+//                        stack, 10, 8, 0.02F));
+//            }
+//            if (event.getType() == ModVillagers.WANDFORGER.get()) {
+//                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
+//                ItemStack stack = new ItemStack(Items.EMERALD, 10);
+//                int villagerLevel = 2;
+//
+//                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
+//                        new ItemStack(ModItems.LIVINGINGOT.get(), 2),
+//                        stack, 10, 8, 0.02F));
+//            }
+//
+//            if (event.getType() == ModVillagers.WANDFORGER.get()) {
+//                Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
+//                ItemStack stack = new ItemStack(ModItems.DOGSUMMONWAND.get(), 1);
+//                int villagerLevel = 2;
+//
+//                trades.get(villagerLevel).add((trader, rand) -> new MerchantOffer(
+//                        new ItemStack(Items.EMERALD, 5),
+//                        stack, 10, 8, 0.02F));
+//            }
+//        }
 
         @SubscribeEvent
         public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {

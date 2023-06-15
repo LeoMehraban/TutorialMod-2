@@ -21,10 +21,10 @@ public class SpitGun extends Item {
     }
 
     private void spit(Player shooter) {
-        if(!shooter.level.isClientSide) {
-            GunSpit llamaspit = new GunSpit(shooter.level, shooter);
+        if(!shooter.level().isClientSide) {
+            GunSpit llamaspit = new GunSpit(shooter.level(), shooter);
             llamaspit.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0.0F, 3.0F, 1.0F);
-            shooter.level.addFreshEntity(llamaspit);
+            shooter.level().addFreshEntity(llamaspit);
         }
 
     }

@@ -20,7 +20,7 @@ public class WandForgerMenu extends AbstractContainerMenu {
     private Level level = null;
 
     public WandForgerMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2), new ItemStackHandler(4));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2), new ItemStackHandler(4));
     }
 
     private final ContainerData data;
@@ -29,7 +29,7 @@ public class WandForgerMenu extends AbstractContainerMenu {
         super(ModMenuTypes.WANDFORGER_MENU.get(), pContainerId);
         checkContainerSize(inv, 4);
         blockEntity = ((WandForger) entity);
-        this.level = inv.player.level;
+        this.level = inv.player.level();
         this.data = data;
 
         addPlayerInventory(inv);

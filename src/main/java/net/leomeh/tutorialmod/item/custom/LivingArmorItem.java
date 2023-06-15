@@ -27,7 +27,7 @@ public class LivingArmorItem extends ArmorItem {
                     .put(ModArmorMaterials.LIVING,
                             new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 1)).build();
 
-    public LivingArmorItem(ArmorMaterial material, EquipmentSlot slot, Properties settings) {
+    public LivingArmorItem(ArmorMaterial material, ArmorItem.Type slot, Properties settings) {
         super(material, slot, settings);
     }
 

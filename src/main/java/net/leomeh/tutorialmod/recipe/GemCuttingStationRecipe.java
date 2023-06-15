@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.leomeh.tutorialmod.TutorialMod;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -37,14 +38,16 @@ public class GemCuttingStationRecipe implements Recipe<Container> {
         if(pLevel.isClientSide()) {
             return false;
         }
-
-        return recipeItems.get(0).test(pContainer.getItem(0));
+        boolean pass = recipeItems.get(0).test(pContainer.getItem(0));
+        return pass;
     }
 
     @Override
-    public ItemStack assemble(Container pContainer) {
+    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
         return null;
     }
+
+
 
     @Override
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
@@ -52,9 +55,11 @@ public class GemCuttingStationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess p_267052_) {
         return output.copy();
     }
+
+
 
     @Override
     public ResourceLocation getId() {
@@ -116,7 +121,7 @@ public class GemCuttingStationRecipe implements Recipe<Container> {
             for (Ingredient ing : recipe.getIngredients()) {
                 ing.toNetwork(buf);
             }
-            buf.writeItemStack(recipe.getResultItem(), false);
+            buf.writeItemStack(recipe.getResultItem(null), false);
         }
     }
 }

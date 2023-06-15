@@ -111,7 +111,7 @@ public interface TradingMob {
             }
             // spawn xp orb
             if (player != null && self.getRandom().nextInt(3) == 0) {
-                self.level.addFreshEntity(new ExperienceOrb(self.level, self.getX(), self.getY(), self.getZ(), 1 + self.getRandom().nextInt(2)));
+                self.level().addFreshEntity(new ExperienceOrb(self.level(), self.getX(), self.getY(), self.getZ(), 1 + self.getRandom().nextInt(2)));
             }
             return true;
         } else {
@@ -135,7 +135,7 @@ public interface TradingMob {
                 }
                 player.setItemInHand(hand, stack);
                 return InteractionResult.SUCCESS;
-            } else if (sendAngryParticlesOnFail() && self.level instanceof ServerLevel serverLevel) {
+            } else if (sendAngryParticlesOnFail() && self.level() instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.ANGRY_VILLAGER, self.getX(), self.getEyeY(), self.getZ(), 4, 0, 0, 0, 0);
             }
         }

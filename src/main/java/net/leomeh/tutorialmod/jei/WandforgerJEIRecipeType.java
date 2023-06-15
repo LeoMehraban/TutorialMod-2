@@ -53,6 +53,6 @@ public class WandforgerJEIRecipeType implements IRecipeCategory<GemCuttingStatio
         builder.addSlot(RecipeIngredientRole.INPUT, 34, 40).addIngredients(recipe.getIngredients().get(0));
         builder.addSlot(RecipeIngredientRole.INPUT, 57, 18).addItemStack(new ItemStack(ModItems.LIVINGINGOT.get(), 2));
         builder.addSlot(RecipeIngredientRole.INPUT, 103,18).addItemStack(new ItemStack(ModItems.CORE_GEM.get()));
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 60).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 80, 60).addItemStack(recipe.getResultItem(null));
     }
 }

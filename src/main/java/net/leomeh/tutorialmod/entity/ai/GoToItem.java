@@ -2,6 +2,7 @@ package net.leomeh.tutorialmod.entity.ai;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -35,7 +36,7 @@ public class GoToItem extends ExtendedBehaviour {
     protected void start(LivingEntity entity) {
         ItemEntity itemEntity = BrainUtils.getMemory(entity, MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM);
         if(itemEntity != null && !BrainUtils.hasMemory(entity, MemoryModuleType.WALK_TARGET)) {
-            WalkTarget walkTarget = new WalkTarget(new BlockPos(itemEntity.getPosition(1f)), 1, 1);
+            WalkTarget walkTarget = new WalkTarget(new BlockPos(new Vec3i((int) itemEntity.getPosition(1f).x,(int) itemEntity.getPosition(1f).y,(int) itemEntity.getPosition(1f).z)), 1, 1);
             BrainUtils.setMemory(entity, MemoryModuleType.WALK_TARGET, walkTarget);
         }
     }

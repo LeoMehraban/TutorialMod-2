@@ -27,7 +27,7 @@ public class SummonWands extends Item {
     }
 
     public static void onPutOnArmor(Player player) {
-        if(!player.getLevel().isClientSide()) {
+        if(!player.level().isClientSide()) {
             player.getCapability(PlayerSlotsProvider.PLAYER_SLOTS).ifPresent(slots -> {
                 SlotsHudOverlay.SLOTS_COUNT += 2;
                 slots.update(true);
@@ -44,7 +44,7 @@ public class SummonWands extends Item {
     }
 
     public static void onTakeOffArmor(Player player) {
-        if(!player.getLevel().isClientSide()) {
+        if(!player.level().isClientSide()) {
             DespawnC2SPacket.doThing((ServerPlayer) player);
             SlotsHudOverlay.SLOTS_COUNT -= 2;
             player.getCapability(PlayerSlotsProvider.PLAYER_SLOTS).ifPresent(slots -> {
@@ -56,7 +56,7 @@ public class SummonWands extends Item {
     }
 
     public Entity summonAnimal(ServerLevel level, ItemStack item, Player player, EntityType entity){
-        Entity animal =  entity.spawn(level, item, player,new BlockPos(player.getPosition(1).x, player.getPosition(1).y, player.getPosition(1).z), MobSpawnType.MOB_SUMMONED, false, false);
+        Entity animal =  entity.spawn(level, item, player,new BlockPos((int)player.getPosition(1).x,(int) player.getPosition(1).y, (int) player.getPosition(1).z), MobSpawnType.MOB_SUMMONED, false, false);
         return animal;
     }
 

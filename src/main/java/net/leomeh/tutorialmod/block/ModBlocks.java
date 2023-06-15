@@ -2,22 +2,12 @@ package net.leomeh.tutorialmod.block;
 
 import net.leomeh.tutorialmod.TutorialMod;
 import net.leomeh.tutorialmod.block.custom.*;
-//import net.leomeh.tutorialmod.block.custom.WandForgerBlock;
-import net.leomeh.tutorialmod.block.entity.WandForger;
 import net.leomeh.tutorialmod.item.ModItems;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -33,18 +23,18 @@ public class ModBlocks {
         registerBlockItem(name, toReturn);
         return toReturn;
     }
-    public static  final RegistryObject<Block> LIVINGMETAL_BLOCK = registerBlock("livingmetal_block", () -> new LivingMetal(BlockBehaviour.Properties.of(Material.HEAVY_METAL).strength(6f).requiresCorrectToolForDrops()));
-    public static  final RegistryObject<Block> LIVINGSTONE = registerBlock("livingstone", () -> new LivingStone(BlockBehaviour.Properties.of(Material.STONE).strength(6f).requiresCorrectToolForDrops()));
+    public static  final RegistryObject<Block> LIVINGMETAL_BLOCK = registerBlock("livingmetal_block", () -> new LivingMetal(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(6f).requiresCorrectToolForDrops()));
+    public static  final RegistryObject<Block> LIVINGSTONE = registerBlock("livingstone", () -> new LivingStone(BlockBehaviour.Properties.copy(Blocks.STONE).strength(6f).requiresCorrectToolForDrops()));
 
-    public static  final RegistryObject<Block> CORE_GEM_BLOCK = registerBlock("core_gem_block", () -> new Block(BlockBehaviour.Properties.of(Material.HEAVY_METAL).strength(6f).requiresCorrectToolForDrops()));
+    public static  final RegistryObject<Block> CORE_GEM_BLOCK = registerBlock("core_gem_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(6f).requiresCorrectToolForDrops()));
 
-    public static  final RegistryObject<Block> CORE_GEM_ORE = registerBlock("core_gem_ore", () -> new Block(BlockBehaviour.Properties.of(Material.STONE).strength(6f).requiresCorrectToolForDrops()));
+    public static  final RegistryObject<Block> CORE_GEM_ORE = registerBlock("core_gem_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).strength(6f).requiresCorrectToolForDrops()));
 
-    public static  final RegistryObject<Block> CORE_GEM_DEEPSLATE_ORE = registerBlock("deepslate_core_gem_ore", () -> new Block(BlockBehaviour.Properties.of(Material.STONE).strength(6f).requiresCorrectToolForDrops()));
+    public static  final RegistryObject<Block> CORE_GEM_DEEPSLATE_ORE = registerBlock("deepslate_core_gem_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE).strength(6f).requiresCorrectToolForDrops()));
 
-    public static  final RegistryObject<Block> WANDFORGER_TABLE = registerBlock("wand_forger_table", () -> new WandForgerBlock(BlockBehaviour.Properties.of(Material.STONE).strength(4f)));
+    public static  final RegistryObject<Block> WANDFORGER_TABLE = registerBlock("wand_forger_table", () -> new WandForgerBlock(BlockBehaviour.Properties.copy(Blocks.STONE).strength(4f)));
 
-    public static  final RegistryObject<Block> DEATHSTEEL_BLOCK = registerBlock("deathsteel_block", () -> new DeathSteel(BlockBehaviour.Properties.of(Material.HEAVY_METAL).strength(4f).requiresCorrectToolForDrops()));
+    public static  final RegistryObject<Block> DEATHSTEEL_BLOCK = registerBlock("deathsteel_block", () -> new DeathSteel(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(4f).requiresCorrectToolForDrops()));
 //
 //    public static  final RegistryObject<Block> MANAWOOD_LOG = registerBlock("manawood_log", () -> new ModFlammibleRotatedPillerBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).strength(6f)), CreativeModeTab.TAB_MISC);
 //

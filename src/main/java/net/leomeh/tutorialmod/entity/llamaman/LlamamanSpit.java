@@ -3,9 +3,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
@@ -32,7 +36,7 @@ public class LlamamanSpit extends Projectile {
     public void tick() {
         super.tick();
         Vec3 vec3 = this.getDeltaMovement();
-        HitResult hitresult = ProjectileUtil.getHitResult(this, this::canHitEntity);
+        HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult))
             this.onHit(hitresult);
         double d0 = this.getX() + vec3.x;
@@ -41,7 +45,7 @@ public class LlamamanSpit extends Projectile {
         this.updateRotation();
         float f = 0.99F;
         float f1 = 0.06F;
-        if (this.level.getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir)) {
+        if (this.level().getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir)) {
             this.discard();
         } else if (this.isInWaterOrBubble()) {
             this.discard();
@@ -54,7 +58,6 @@ public class LlamamanSpit extends Projectile {
             this.setPos(d0, d1, d2);
         }
     }
-
     /**
      * Called when the arrow hits an entity
      */
@@ -62,14 +65,13 @@ public class LlamamanSpit extends Projectile {
         super.onHitEntity(pResult);
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
-            pResult.getEntity().hurt(DamageSource.indirectMobAttack(this, (LivingEntity)entity).setProjectile(), 3.0F);
+            pResult.getEntity().hurt((this.damageSources().mobProjectile(getOwner(), (LivingEntity) pResult.getEntity())), 3.0F);
         }
-
     }
 
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.discard();
         }
 
@@ -86,7 +88,7 @@ public class LlamamanSpit extends Projectile {
 
         for(int i = 0; i < 7; ++i) {
             double d3 = 0.4D + 0.1D * (double)i;
-            this.level.addParticle(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d0 * d3, d1, d2 * d3);
+            this.level().addParticle(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d0 * d3, d1, d2 * d3);
         }
 
         this.setDeltaMovement(d0, d1, d2);

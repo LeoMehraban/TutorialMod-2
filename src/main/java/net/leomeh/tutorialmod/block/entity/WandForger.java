@@ -1,5 +1,4 @@
 package net.leomeh.tutorialmod.block.entity;
-//import net.leomeh.tutorialmod.crafting.WandForgingList;
 import net.leomeh.tutorialmod.item.ModItems;
 import net.leomeh.tutorialmod.recipe.GemCuttingStationRecipe;
 import net.leomeh.tutorialmod.recipe.ModRecipes;
@@ -8,8 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-//import net.minecraft.network.chat.TextComponent;
-        import net.minecraft.world.Container;
+import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -18,13 +16,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-        import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-        import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-//import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -76,7 +73,7 @@ public class WandForger extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new WandForgerMenu(pContainerId, pInventory,pPlayer.level.getBlockEntity(this.getBlockPos()), this.data, lazyItemHandler.orElse(null));
+        return new WandForgerMenu(pContainerId, pInventory,pPlayer.level().getBlockEntity(this.getBlockPos()), this.data, lazyItemHandler.orElse(null));
     }
     @Nonnull
     @Override
@@ -115,7 +112,6 @@ public class WandForger extends BlockEntity implements MenuProvider {
         }
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
-
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, WandForger pBlockEntity) {
         if(hasRecipe(pBlockEntity)) {
             pBlockEntity.progress++;
@@ -135,12 +131,15 @@ public class WandForger extends BlockEntity implements MenuProvider {
             for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
                 inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
             }
+
             Optional<GemCuttingStationRecipe> recipe = level.getRecipeManager()
                     .getRecipeFor(ModRecipes.WANDFORGER_TYPE.get(),inventory, level);
-            return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
-                    canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem()) &&
-                    hasLivinginLivingSlot(entity) && hasCoreinCoreSlot(entity);
+            if(recipe.isPresent()){
 
+            }
+            return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
+                    canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem(null)) &&
+                    hasLivinginLivingSlot(entity) && hasCoreinCoreSlot(entity);
     }
 
     private static void craftItem(WandForger pEntity) {
@@ -155,10 +154,10 @@ public class WandForger extends BlockEntity implements MenuProvider {
 
         if (hasRecipe(pEntity)) {
             pEntity.itemHandler.extractItem(0, 1, false);
-            pEntity.itemHandler.extractItem(1, 2, false);
+            pEntity.itemHandler.extractItem(1, 1, false);
             pEntity.itemHandler.extractItem(2, 1, false);
 
-            pEntity.itemHandler.setStackInSlot(3, new ItemStack(recipe.get().getResultItem().getItem()));
+            pEntity.itemHandler.setStackInSlot(3, new ItemStack(recipe.get().getResultItem(null).getItem()));
 
             pEntity.resetProgress();
         }
@@ -178,7 +177,7 @@ public class WandForger extends BlockEntity implements MenuProvider {
 
 
     private static boolean hasLivinginLivingSlot(WandForger entity) {
-        return entity.itemHandler.getStackInSlot(1).getItem() == ModItems.LIVINGINGOT.get() && entity.itemHandler.getStackInSlot(1).getCount() > 2;
+        return entity.itemHandler.getStackInSlot(1).getItem() == ModItems.LIVINGINGOT.get();
     }
 
     private static boolean hasCoreinCoreSlot(WandForger entity) {

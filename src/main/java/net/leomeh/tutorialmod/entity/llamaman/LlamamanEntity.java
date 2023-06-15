@@ -171,17 +171,17 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, Ge
 
 
     private void spit(LivingEntity pTarget) {
-        LlamamanSpit llamaspit = new LlamamanSpit(this.level, this);
+        LlamamanSpit llamaspit = new LlamamanSpit(this.level(), this);
         double d0 = pTarget.getX() - this.getX();
         double d1 = pTarget.getY(0.3333333333333333D) - llamaspit.getY();
         double d2 = pTarget.getZ() - this.getZ();
         double d3 = Math.sqrt(d0 * d0 + d2 * d2) * (double) 0.2F;
         llamaspit.shoot(d0, d1 + d3, d2, 1.5F, 10.0F);
         if (!this.isSilent()) {
-            this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), SoundEvents.LLAMA_SPIT, this.getSoundSource(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+            this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), SoundEvents.LLAMA_SPIT, this.getSoundSource(), 1.0F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
         }
 
-        this.level.addFreshEntity(llamaspit);
+        this.level().addFreshEntity(llamaspit);
         this.didSpit = true;
     }
 
@@ -308,7 +308,7 @@ public class LlamamanEntity extends PathfinderMob implements RangedAttackMob, Ge
 
     @Override
     protected void customServerAiStep() {
-        List<ItemEntity> nearbyItemEntities = getNearbyItemEntities((ServerLevel) this.level, this);
+        List<ItemEntity> nearbyItemEntities = getNearbyItemEntities((ServerLevel) this.level(), this);
         nearbyItemEntities.forEach((itemEntity -> {
             if(itemEntity.getItem().getItem() == getTradingItem()) {
                 pickUpItem(itemEntity);
